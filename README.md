@@ -1,8 +1,8 @@
-ansible_molecule_template
+ansible_molecule_template_jenkins
 =========
 
 
-[![CI](https://github.com/habbis/ansible_molecule_template/workflows/CI/badge.svg)](https://github.com/habbis/ansible_molecule_template/actions?query=workflow%3ACI)
+[![CI](https://github.com/habbis/ansible_molecule_template_jenkins/workflows/CI/badge.svg)](https://github.com/habbis/ansible_molecule_template_jenkins/actions?query=workflow%3ACI)
 
 
 My template role for ansible.
@@ -81,9 +81,9 @@ just like a site.yml file.
 
 
   tasks:
-    - name: "Include ansible_molecule_template"
+    - name: "Include ansible_molecule_template_jenkins"
       include_role:
-        name: "ansible_molecule_template"
+        name: "ansible_molecule_template_jenkins"
 ```
 
 molecule.yml is the central configuration file for testing ansible playbooks.
@@ -146,14 +146,14 @@ See [molecule doc](https://molecule.readthedocs.io/en/latest/getting-started.htm
 To change role name in all files in the folder.
 
 ```
-find . -type f -print0 | xargs -0 sed -i "s/ansible_molecule_template/new_role/g"
+find . -type f -print0 | xargs -0 sed -i "s/ansible_molecule_template_jenkins/new_role/g"
 
 ```
 
 And for macos since apple is special.
 
 ```
-find . -type f -print0 | LC_ALL=C  xargs -0  sed -i "" 's/ansible_molecule_template/new_role/g'
+find . -type f -print0 | LC_ALL=C  xargs -0  sed -i "" 's/ansible_molecule_template_jenkins/new_role/g'
 ```
 
 Example site.yml
@@ -174,5 +174,5 @@ Example site.yml
     #-  defaults/secrets.yml
 
   roles:
-    - { role: ../ansible_molecule_template }
+    - { role: ../ansible_molecule_template_jenkins }
 ```
