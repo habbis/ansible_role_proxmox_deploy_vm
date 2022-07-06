@@ -13,5 +13,5 @@
       include_role:
         name: "ansible_molecule_template_jenkins"
 
-  #roles:
-    #- role: habbis.ansible_molecule_template_jenkins
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
