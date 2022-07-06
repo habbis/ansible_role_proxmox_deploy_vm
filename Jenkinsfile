@@ -31,7 +31,7 @@ pipeline {
     stage ('Display versions') {
       steps {
         sh '''
-          source virtenv/bin/activate
+          . ./virtenv/bin/activate
           docker -v
           python -V
           ansible --version
@@ -43,7 +43,7 @@ pipeline {
     stage ('Molecule test') {
       steps {
         sh '''
-          source virtenv/bin/activate
+          . ./virtenv/bin/activate
           molecule test
         '''
       }
