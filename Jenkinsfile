@@ -22,7 +22,7 @@ pipeline {
       steps {
         sh ''' #!/bin/bash
           python3 -m venv virtenv 
-          source virtenv/bin/activate
+          . ./virtenv/bin/activate
           python3 -m pip install --upgrade ansible molecule docker
         '''
       }
