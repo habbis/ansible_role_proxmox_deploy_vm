@@ -5,7 +5,6 @@ driver:
   name: docker
 platforms:
   - name: instance
-    #image: "habbis0/docker-${MOLECULE_DISTRO:-centos7}-ansible:latest"
     image: "habbis0/docker-centos7-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
@@ -13,8 +12,7 @@ platforms:
     privileged: true
     pre_build_image: true
   - name: instance-2
-    #image: "habbis0/docker-${MOLECULE_DISTRO:-centos7}-ansible:latest"
-    image: "habbis0/docker-centos7-ansible:latest"
+    image: "habbis0/docker-debian11-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
