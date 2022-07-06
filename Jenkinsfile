@@ -21,7 +21,7 @@ pipeline {
     stage ('Setup Python virtual environment') {
       steps {
         sh ''' #!/bin/bash
-          python3 -m venv virtenv 
+          python3 -m venv virtenv
           . ./virtenv/bin/activate
           python3 -m pip install --upgrade ansible molecule docker
         '''
