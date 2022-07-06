@@ -24,6 +24,7 @@ pipeline {
           python3 -m venv virtenv
           . ./virtenv/bin/activate
           python3 -m pip install --upgrade ansible molecule docker
+          pip3 install 'molecule[docker]'
         '''
       }
     }
