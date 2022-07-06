@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'habbis0/docker-debian11-ansible'
+      image 'quay.io/ansible/creator-ee'
       args '-v /var/run/docker.sock:/var/run/docker.sock'
     }
   }
