@@ -1,6 +1,5 @@
 pipeline {
   agent {
-    label 'docker'
     docker {
       image 'hub.docker.com/r/habbis0/docker-debian11-ansible'
       args '-v /var/run/docker.sock:/var/run/docker.sock'
