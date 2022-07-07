@@ -2,56 +2,69 @@ ansible_molecule_template_jenkins
 =========
 
 
-[![CI](https://github.com/habbis/ansible_molecule_template_jenkins/workflows/CI/badge.svg)](https://github.com/habbis/ansible_molecule_template_jenkins/actions?query=workflow%3ACI)
+
 
 
 My template role for ansible.
 
-This role have github-action molecule to test playbook.
+This ansible template is using jenkins multibranch pipeline to test ansible-playbooks and you need docker installed on the build node.
 
-Also using stabel issue bot with this repo.
-
-Its under here
+The Jenkins file looks like this you can call it what you want but give the name name on jenkins multibranch pipeline.
 
 ```
- .github/stale.yml
+pipeline {
+
+  agent {
+    // the label for the build node.
+    label 'hf-t-build02-docker'
+  }
+
+  stages {
+
+    stage ('Get latest code') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage ('Setup Python virtual environment') {
+      steps {
+        sh ''' #!/bin/bash
+          python3 -m venv virtenv
+          . ./virtenv/bin/activate
+          python3 -m pip install --upgrade ansible molecule docker
+          pip3 install 'molecule[docker]'
+        '''
+      }
+    }
+
+    stage ('Display versions') {
+      steps {
+        sh '''
+          . ./virtenv/bin/activate
+          docker -v
+          python -V
+          ansible --version
+          molecule --version
+        '''
+      }
+    }
+
+    stage ('Molecule test') {
+      steps {
+        sh '''
+          . ./virtenv/bin/activate
+          molecule test
+        '''
+      }
+    }
+
+  }
+
+}
 
 ```
 
-see Jeff Geerling blog post about it.
-
-[Enabling a stale issue bot on GitHub repositories](https://www.jeffgeerling.com/blog/2020/enabling-stale-issue-bot-on-my-github-repositories)
-
-Github-action molecule is under.
-
-```
-.github/workflows/ci.yml
-
-```
-Github action is a automation tools.
-
-In the github action file ci.yml you
-can set diffrent linux distros under test matrix.
-
-There is also setup yamllint with github-action.
-
-Here you can also exclude files.
-
-```
----
-extends: default
-
-rules:
-  line-length:
-    max: 200
-    level: warning
-
-ignore: |
-  .github/stale.yml
-  .travis.yml
-  site.yml
-
-```
 
 There is also .ansible-lint file for linting ansible.
 
@@ -68,7 +81,10 @@ there you have the files converge.yml, molecule.yml .
 converge.yml here you call the role so molecule can run it 
 just like a site.yml file.
 
+When using jenkins it looks like this.
+
 ```
+---
 - name: Converge
   hosts: all
   become: true
@@ -77,18 +93,21 @@ just like a site.yml file.
   #vars_files:
   #  - ../../defaults/main.yml
   # variables
+  # add vars if you need it
   #vars:
 
 
   tasks:
-    - name: "Include ansible_molecule_template_jenkins"
-      include_role:
-        name: "ansible_molecule_template_jenkins"
+        
+  roles:
+    - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
 ```
 
 molecule.yml is the central configuration file for testing ansible playbooks.
 Here you can choose what docker image it will use for testing. The line test_sequence here 
 you choose testing scenario.
+
+With jenkins you need multipule instance to run a test for a spesific distro and this is the same way you can test on your laptop.
 
 ```
 dependency:
@@ -96,9 +115,43 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: instance
-    # image is for jeff gerling
-    image: "geerlingguy/docker-${MOLECULE_DISTRO:-centos7}-ansible:latest"
+  - name: instance-centos7
+    image: "habbis0/docker-centos7-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+  - name: instance-ubi8-rhel
+    image: "habbis0/docker-uib8-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+  - name: instance-rockylinux8
+    image: "habbis0/docker-rockylinux8-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+  - name: instance-debian11
+    image: "habbis0/docker-debian11-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+  - name: instance-debian10
+    image: "habbis0/docker-debian10-ansible:latest"
+    command: ${MOLECULE_DOCKER_COMMAND:-""}
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    privileged: true
+    pre_build_image: true
+  - name: instance-ubuntu2004
+    image: "habbis0/docker-ubuntu2004-ansible:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
@@ -109,7 +162,6 @@ provisioner:
   playbooks:
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
 scenario:
-  # comment out what you dont need for testing
   test_sequence:
     - lint
     - destroy
@@ -123,6 +175,7 @@ scenario:
     - side_effect
     - verify
     - destroy
+
 ```
 
 To test on your machine with molecule since the driver is docker 
