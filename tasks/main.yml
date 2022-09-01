@@ -1,9 +1,9 @@
 ---
-- include_tasks: setup-RedHat.yml
-  when: ( ansible_os_family == 'RedHat' or ansible_pkg_mgr == "dnf" or ansible_pkg_mgr == "yum" )
-
-- include_tasks: setup-Debian.yml
-  when: (ansible_distribution == "Debian")
-
-- include_tasks: setup-Ubuntu.yml
-  when: (ansible_distribution == "Ubuntu")
+- include_tasks: add_dns_record.yml
+  when: dns_record
+- include_tasks: deploy_vm.yml
+  when: deploy_vm
+- include_tasks: remove_dns_record.yml
+  when: remove_dns_record
+- include_tasks: remove_vm.yml
+  when: remove_vm

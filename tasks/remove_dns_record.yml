@@ -1,0 +1,13 @@
+- name: remove A record vm
+  community.general.nsupdate:
+    key_name: "{{ keyname }}"
+    key_secret: "{{ keysecret }}"
+    #key_algorithm: hmac-sha256
+    server: "{{ dns_server }}"
+    port: 5300
+    zone: "{{ zone }}"
+    record: "{{ vmname }}"
+    value: ["{{ vmip }}"]
+    type: "A"
+    state: absent
+  when: remove_dns_record

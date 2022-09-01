@@ -9,9 +9,9 @@
 
 
   tasks:
-    #- name: "Include ansible_molecule_template_jenkins"
+    #- name: "Include ansible_role_proxmox_deploy_vm"
     #  include_role:
-    #    name: "ansible_molecule_template_jenkins"
+    #    name: "ansible_role_proxmox_deploy_vm"
 
   roles:
     - role: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | basename }}"
