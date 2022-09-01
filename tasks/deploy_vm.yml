@@ -30,7 +30,7 @@
     net:
       net0: 'virtio,bridge={{ bridge }},tag={{ vlanid }}'
     ipconfig:
-      ipconfig0: 'ip={{ ip_address }}/{{ netmask }},gw={{ gateway }}'
+      ipconfig0: 'ip={{ ip_address }}.{{ 1 + {{ ip_count_start }}|int }}/{{ netmask }},gw={{ gateway }}'
     update: yes
     state: present
   delegate_to: localhost

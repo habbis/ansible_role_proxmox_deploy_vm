@@ -14,8 +14,12 @@ proxmox_password:  yourpass
 nameservers: 1.1.1.1 8.8.8.8
 
 vmname: hf-test
-vm_count: 2
-vmip: 192.168.1.4
+# how many vm you want
+vm_count: 1
+# star with the number before 
+# the end of the ip you want
+ip_count_start: 1
+vmip: 192.168.1
 gateway: 192.168.1.1
 netmask: 24
 vlanid: 22
@@ -28,6 +32,12 @@ storage: local-ceph
 template: deb11-tmpl-vm
 # yes for full clone no for linked clone 
 linked_or_full_clone: true
+
+
+dns_record: false
+deploy_vm: true
+remove_dns_record: false
+remove_vm: false
 
 
 
