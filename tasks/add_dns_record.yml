@@ -10,4 +10,5 @@
     value: ["{{ vmip }}"]
     type: "A"
     state: present
+  delegate_to: localhost
   when: dns_record

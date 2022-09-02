@@ -10,4 +10,5 @@
     value: ["{{ vmip }}"]
     type: "A"
     state: absent
+  delegate_to: localhost
   when: remove_dns_record
